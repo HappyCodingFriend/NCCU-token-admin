@@ -6,7 +6,7 @@ const web3 = new Web3('ws://localhost:8546')
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  res.render('index.html');
+  res.render('issue.html');
 });
 
 //取得餘額
@@ -36,7 +36,7 @@ router.post('/transaction', function(req, res, next){
     console.log(result)
     res.send(result);
   })
-  .on('error', , function(err){
+  .on('error', function(err){
     console.log(error);
     res.send("error")
   })
