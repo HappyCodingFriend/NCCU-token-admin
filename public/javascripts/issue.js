@@ -14,7 +14,7 @@ $(document).ready(function(){
         let name = $('#name').val();
         let totalSupply = $('#totalSupply').val();
         let deadline = (new Date(new Date($('#deadline').val()) - 8*60*60*1000)).valueOf();
-        let privateKey = web3.eth.accounts.decrypt(keyfile,$("#pwd").val());
+        let privateKey = web3.eth.accounts.decrypt(keyfile,$("#pwd").val()).privateKey;
         let nonce = 0;
         let signedTransaction = issue(name, totalSupply, deadline, privateKey, nonce);
         $.post('/transaction',{

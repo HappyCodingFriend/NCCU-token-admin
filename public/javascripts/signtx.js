@@ -3,6 +3,11 @@ const web3 = new Web3();
 const ERC223TokenContract = new web3.eth.Contract(contracts.ERC223Token.abi);
 const ExchangeContract = new web3.eth.Contract(contracts.Exchange.abi);
 
+const contracts;
+$.get('jsonfile',function(result){
+    contracts = result;
+})
+
 //發行 (名稱，發行量，期限，私鑰，nonce)
 function issue(name, totalSupply, deadline, privateKey, nonce){
 
@@ -19,15 +24,6 @@ function issue(name, totalSupply, deadline, privateKey, nonce){
 function transfer(to, value, privateKey, token, nonce){
 
     let data = ERC223TokenContract.methods.transfer(to,value).encodeABI();
-
-    let tx = signTx(privateKey, token, nonce, data);
-    return tx.rawTransaction;
-
-}
-//轉移(對象，值，私鑰，token合約地址，nonce)
-function balance(account, privateKey, token, nonce){
-
-    let data = ERC223TokenContract.methods.balanceOf(account).encodeABI();
 
     let tx = signTx(privateKey, token, nonce, data);
     return tx.rawTransaction;
@@ -65,11 +61,11 @@ function cancelExchange(exchange, privateKey, nonce){
 function signTx(privateKey, _to, _nonce, _data){
     let tx = web3.eth.accounts.signTransaction({
         to: _to,
-        gas: 2000000,
+        gas: 3000000,
         gasPrice: '234567897654321',
         nonce: _nonce, 
         data: _data,
-        chainId: "0x0" //改成你的chain id
+        chainId: "0x11" //改成你的chain id
     }, privateKey)
     return tx;
 }

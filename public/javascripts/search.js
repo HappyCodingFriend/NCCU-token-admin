@@ -3,7 +3,7 @@ $(document).ready(function(){
     $('#balance').click(function(){
         let token = $('#token2').val();
         let account = $('#account').val();
-        $.post('/balance',{
+        $.get('/balance',{
             token: token,
             account: account
         },function(result){
@@ -12,7 +12,7 @@ $(document).ready(function(){
     })
     $('#searchName').click(function(){
         let token = $('#token3').val();
-        $.post('/name',{
+        $.get('/name',{
             token: token
         },function(result){
             $('#result2').text('名稱：' + result)
