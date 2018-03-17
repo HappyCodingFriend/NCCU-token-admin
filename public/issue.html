@@ -10,6 +10,18 @@
 <body>
 
     <div class="container">
+        <br>
+        <div class="row" style="float:right">
+            <a href="/">
+                <button type="button" class="btn btn-success">發行</button>
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="/transfer">
+                <button type="button" class="btn btn-success">發送</button>
+            </a>&nbsp;&nbsp;&nbsp;
+            <a href="/search">
+                <button type="button" class="btn btn-success">查詢</button>
+            </a>&nbsp;&nbsp;&nbsp;
+        </div>
         <h1>點數管理</h1>
         <div class="col-md-3">
             <h3>發行點數</h3>
@@ -35,7 +47,11 @@
             </div>
 
             <button type="button" class="btn btn-success" id="issue">發行</button>
-            <p id="contracts"></p>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group" style="height:300px;overflow:scroll;">
+                <p id="contracts"></p>
+            </div>
         </div>
     </div>
 

@@ -1,0 +1,42 @@
+<div class="container">
+    <br>
+    <div class="row" style="float:right">
+        <a href="/">
+            <button type="button" class="btn btn-success">發行</button>
+        </a>&nbsp;&nbsp;&nbsp;
+        <a href="/transfer">
+            <button type="button" class="btn btn-success">發送</button>
+        </a>&nbsp;&nbsp;&nbsp;
+        <a href="/search">
+            <button type="button" class="btn btn-success">查詢</button>
+        </a>&nbsp;&nbsp;&nbsp;
+    </div>
+    <h1>查詢點數</h1>
+    <div class="col-md-3">
+        <h3>查詢餘額</h3>
+        <div class="form-group">
+            <label for="token2">token地址</label>
+            <input class="form-control" id="token2" type="text">
+        </div>
+        <div class="form-group">
+            <label for="account">帳戶地址</label>
+            <input class="form-control" id="account" type="text">
+        </div>
+        <button type="button" class="btn btn-success" id="balance">查詢</button>
+        <p id="result1"></p>
+    </div>
+
+    <div class="col-md-3">
+        <h3>查詢名稱</h3>
+        <div class="form-group">
+            <label for="token3">token地址</label>
+            <input class="form-control" id="token3" type="text">
+        </div>
+        <button type="button" class="btn btn-success" id="searchName">查詢</button>
+        <p id="result2"></p>
+    </div>
+</div>
+
+<script src="./javascripts/search.js"></script>
+<script src="./javascripts/web3.min.js"></script>
+<script src="./javascripts/signtx.js"></script>
