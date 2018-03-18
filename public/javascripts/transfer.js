@@ -21,16 +21,17 @@ $(document).ready(function () {
         $.get('/nonce', {
             account: web3.eth.accounts.privateKeyToAccount(privateKey).address
         }, function (nonce) {
-            for (a in to) {
-                transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
-                    console.log(tx);
-                    $.post('/transaction', {
-                        tx: tx.rawTransaction
-                    }, function (result) {
-                        $('#transaciotns').prepend(syntaxHighlight(result) + '<hr>');
-                    });
+            //for (a in to) {
+            //transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
+            transfer($('#address').val(), value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
+                console.log(tx);
+                $.post('/transaction', {
+                    tx: tx.rawTransaction
+                }, function (result) {
+                    $('#transaciotns').prepend(syntaxHighlight(result) + '<hr>');
                 });
-            }
+            });
+            //}
         });
     });
     $('#addPerson').click(function () {
@@ -38,11 +39,11 @@ $(document).ready(function () {
     })
 });
 
-function addOptions(stdnumber, name, address) {
+/*function addOptions(stdnumber, name, address) {
     let html = '<label style="display: block;">';
     html += '<input type="checkbox" id="to" value="' + address + '"> ' + stdnumber + ' ' + name + ' ' + address + '</label>'
     $('#list').append(html);
-}
+}*/
 
 function syntaxHighlight(json) {
     if (typeof json != 'string') {
