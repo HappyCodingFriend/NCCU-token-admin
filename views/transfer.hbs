@@ -24,7 +24,7 @@
     </div>
     <div class="col-md-4">
         <label for="to">目標地址</label>
-        <div class="form-group" style="height:300px;overflow:scroll;">
+        <div id="list"  class="form-group" style="height:300px;overflow:scroll;">
             <div>
                 <label style="display: block;">
                     <input type="checkbox" id="to" value="1ae8e162bd5f29755e61131d7d379d1b0ff582dd"> 103703017 賴晨禾 0x1ae8e162bd5f29755e61131d7d379d1b0ff582dd
@@ -52,7 +52,21 @@
         <button type="button" class="btn btn-success" id="transfer">確認</button>
     </div>
     <div class="col-md-5">
-        <div id="transaciotns" style="height:500px;overflow:scroll;">
+        <label for="to">增加目標地址</label>
+        <div class="form-group">
+            <label for="stdnumber">學號</label>
+            <input type="text" class="form-control" id="stdnumber">
+        </div>
+        <div class="form-group">
+            <label for="name">姓名</label>
+            <input type="text" class="form-control" id="name">
+        </div>
+        <div class="form-group">
+            <label for="address">帳戶地址</label>
+            <input type="text" class="form-control" id="address">
+        </div>
+        <button type="button" class="btn btn-success" id="addPerson">新增</button>
+        <div id="transaciotns" style="height:280px;overflow:scroll;">
         </div>
     </div>
 </div>
