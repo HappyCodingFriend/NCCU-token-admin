@@ -23,7 +23,7 @@ $(document).ready(function () {
         }, function (nonce) {
             //for (a in to) {
             //transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
-            transfer($('#address').val(), value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
+            transfer($('#address').val(), value, privateKey, token, parseInt(nonce)).then(function (tx) {
                 console.log(tx);
                 $.post('/transaction', {
                     tx: tx.rawTransaction
