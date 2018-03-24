@@ -27,7 +27,9 @@ contract ContractReceiver {
 contract ERC223Token is SafeMath {
     
     event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
-
+    event Approval(address _third, uint _value);
+    
+    mapping(address => uint) approval;
     mapping(address => uint) balances;
     
     string public name;
@@ -38,6 +40,8 @@ contract ERC223Token is SafeMath {
     bool public valid = true;
     
     address owner;
+    mapping(address => bool) auth;
+    
     uint price = 0;
     
     function ERC223Token(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply, uint64 _deadline) public {
@@ -52,6 +56,10 @@ contract ERC223Token is SafeMath {
     
     modifier isOwner(){
         if(owner == msg.sender)
+            _;
+    }
+    modifier isAuth(){
+        if(auth[msg.sender])
             _;
     }
     
@@ -149,13 +157,28 @@ contract ERC223Token is SafeMath {
         return true;
     }
     
-    function transferFromAtoB(address _from, address _to, uint _value) isOwner private returns (bool success) {
+    function transferFromAtoB(address _from, address _to, uint _value) isOwner public returns (bool success) {
         require(balanceOf(_from) >= _value);
         bytes memory empty;
         balances[_from] = safeSub(balanceOf(_from), _value);
         balances[_to] = safeAdd(balanceOf(_to), _value);
         Transfer(_from, _to, _value, empty);
         return true;
+    }
+    function transferFromAuth(address _to, uint _value) isAuth public returns (bool success) {
+        require(approval[msg.sender] >= _value);
+        bytes memory empty;
+        balances[owner] = safeSub(balanceOf(owner), _value);
+        balances[_to] = safeAdd(balanceOf(_to), _value);
+        Transfer(owner, _to, _value, empty);
+        return true;
+    }
+    
+    function approve(address _third, uint _value) isOwner public {
+        if(!auth[_third]){
+            auth[_third] = true;
+        }
+        approval[_third] = _value;
     }
     
     function time(uint64 _now) isOwner public {

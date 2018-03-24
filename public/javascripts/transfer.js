@@ -15,9 +15,9 @@ $(document).ready(function () {
         let value = $('#value').val();
         let privateKey = web3.eth.accounts.decrypt(keyfile, $("#pwd").val()).privateKey;
         let to = [];
-        $(':checkbox:checked').each(function (i) {
+        /*$(':checkbox:checked').each(function (i) {
             to[i] = '0x' + $(this).val();
-        });
+        });*/
         $.get('/nonce', {
             account: web3.eth.accounts.privateKeyToAccount(privateKey).address
         }, function (nonce) {

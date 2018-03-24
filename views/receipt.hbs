@@ -1,0 +1,21 @@
+<div class="container">
+    <br>
+    <h1>交易內容</h1><hr>
+    <h5><a href="/transaction/{{receipt.transactionHash}}">{{receipt.transactionHash}}</a></h5>
+    <pre>
+    transactionIndex : {{receipt.transactionIndex}}
+    blockHash : {{receipt.blockHash}}
+    blockNumber : {{receipt.blockNumber}}
+    contractAddress : {{receipt.contractAddress}}
+    cumulativeGasUsed : {{receipt.cumulativeGasUsed}}
+    gasUsed : {{receipt.gasUsed}}
+    status : {{receipt.status}}
+    {{#each receipt.logs}}
+    log {{@index}} :
+        address : {{this.address}}
+        data : {{this.data}}
+        topics : {{this.topics}}
+        type : {{this.type}}
+    {{/each}}
+    </pre>
+</div>

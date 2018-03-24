@@ -1,0 +1,18 @@
+<div class="container">
+    <br>
+    <h1>交易內容</h1><hr>
+    <h5><a href="/transaction/{{transaction.hash}}">{{transaction.hash}}</a></h5>
+    <pre>
+    noncce : {{transaction.nonce}}
+    blockHash : {{transaction.blockHash}}
+    blockNumber : {{transaction.blockNumber}}
+    transactionIndex : {{transaction.transactionIndex}}
+    from : {{transaction.from}}
+    to : {{transaction.to}}
+    value : {{transaction.value}}
+    gas : {{transaction.gas}}
+    gasPrice : {{transaction.gasPrice}}
+    input : {{transaction.input}}
+    </pre>
+    <a href="/transaction/receipt/{{transaction.hash}}">Watch Transaction Receipt</a>
+</div>
