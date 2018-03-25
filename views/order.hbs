@@ -2,7 +2,7 @@
     <br>
     <h1>交易點數</h1>
     <div class="row">
-        <div class="col-md-6">
+        <div class="col-md-4">
             <br>
             <div class="col-md-6">
                 <div class="form-group">
@@ -40,21 +40,21 @@
                 <button type="button" class="btn btn-success" id="issue">發行</button>
             </div>
         </div>
-        <div class="col-md-6">
+        <div class="col-md-8">
             <table class="table">
                 <thead>
                     <tr>
                         <th>Order Address</th>
                         <th>Owner</th>
-                        <th>Finished</th>
                     </tr>
                 </thead>
                 <tbody id="list">
+                    {{#each orders}}
                     <tr>
-                        <th></th>
-                        <th></th>
-                        <th></th>
+                        <th>{{address}}</th>
+                        <th>{{owner}}</th>
                     </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>

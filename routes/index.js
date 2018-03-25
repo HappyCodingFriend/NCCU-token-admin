@@ -35,17 +35,19 @@ router.get('/logs/point/:address', function (req, res, next) {
   })
 })
 router.get('/transaction/:hash', function (req, res, next) {
-  web3.eth.getTransaction(req.params.hash).then(function(transaction){
-    res.render('transaction', { title: "交易內容" , transaction : transaction})
+  web3.eth.getTransaction(req.params.hash).then(function (transaction) {
+    res.render('transaction', { title: "交易內容", transaction: transaction })
   })
 })
 router.get('/transaction/receipt/:hash', function (req, res, next) {
-  web3.eth.getTransactionReceipt(req.params.hash).then(function(receipt){
-    res.render('receipt', { title: "交易內容" , receipt : receipt, logs: receipt.logs})
+  web3.eth.getTransactionReceipt(req.params.hash).then(function (receipt) {
+    res.render('receipt', { title: "交易內容", receipt: receipt, logs: receipt.logs })
   })
 })
 router.get('/order', function (req, res, next) {
-  res.render('order', { title: "交易平台" })
+  mysql.getOrderIsNotFinish(function (orders) {
+    res.render('order', { title: "交易平台", orders: orders })
+  })
 })
 
 //取得餘額
@@ -92,10 +94,10 @@ router.post('/transaction', function (req, res, next) {
         });
       }
       //order
-      else if(result.logs.length > 1) {
-        for(let i in result.logs){
-          if(result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409'){
-            web3.eth.getTransaction(result.transactionHash).then(function(order){
+      else if (result.logs.length > 1) {
+        for (let i in result.logs) {
+          if (result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409') {
+            web3.eth.getTransaction(result.transactionHash).then(function (order) {
               //result.logs[i].address 是 order address
               mysql.addOrder(result.logs[i].address, order.from);
               res.send(result.logs[i].address);
@@ -104,7 +106,7 @@ router.post('/transaction', function (req, res, next) {
         }
       }
       //transfer
-      else{
+      else {
         web3.eth.getTransaction(result.transactionHash).then(function (tx) {
           mysql.addTransaction(tx.hash, tx.from, tx.to);
           res.send(result);

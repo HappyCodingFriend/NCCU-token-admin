@@ -26,7 +26,7 @@ $(document).ready(function () {
                 $.post('/transaction', {
                     tx: tx.rawTransaction
                 }, function (result) {
-                    console.log(result);
+                    location.reload();
                 })
             });
         })
