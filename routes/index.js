@@ -41,9 +41,11 @@ router.get('/transaction/:hash', function (req, res, next) {
 })
 router.get('/transaction/receipt/:hash', function (req, res, next) {
   web3.eth.getTransactionReceipt(req.params.hash).then(function(receipt){
-    console.log(receipt.logs[0])
     res.render('receipt', { title: "交易內容" , receipt : receipt, logs: receipt.logs})
   })
+})
+router.get('/order', function (req, res, next) {
+  res.render('order', { title: "交易平台" })
 })
 
 //取得餘額
@@ -82,13 +84,27 @@ router.get('/nonce', function (req, res, next) {
 router.post('/transaction', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
     .on('receipt', function (result) {
+      //issue
       if (result.contractAddress) {
         web3.eth.getTransaction(result.transactionHash).then(function (point) {
           mysql.addPoint(result.contractAddress, point.from)
           res.send(result);
         });
       }
-      else {
+      //order
+      else if(result.logs.length > 1) {
+        for(let i in result.logs){
+          if(result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409'){
+            web3.eth.getTransaction(result.transactionHash).then(function(order){
+              //result.logs[i].address 是 order address
+              mysql.addOrder(result.logs[i].address, order.from);
+              res.send(result.logs[i].address);
+            })
+          }
+        }
+      }
+      //transfer
+      else{
         web3.eth.getTransaction(result.transactionHash).then(function (tx) {
           mysql.addTransaction(tx.hash, tx.from, tx.to);
           res.send(result);

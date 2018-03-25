@@ -1,6 +1,6 @@
-CREATE TABLE `order` (
-  `address` varchar(55) NOT NULL,
-  `owner` varchar(55) NOT NULL,
+CREATE TABLE `orders` (
+  `address` varchar(65) NOT NULL,
+  `owner` varchar(65) NOT NULL,
   `finish` tinyint(4) NOT NULL DEFAULT '0',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
