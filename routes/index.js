@@ -26,12 +26,12 @@ router.get('/logs', function (req, res, next) {
 })
 router.get('/logs/from/:address', function (req, res, next) {
   mysql.getTransactionByFrom(req.params.address, function (logs) {
-    res.render('logs', { title: "交易明細", logs: logs })
+    res.render('logs', { title: "交易明細", logs: logs, search: req.params.address })
   })
 })
 router.get('/logs/point/:address', function (req, res, next) {
   mysql.getTransactionByPoint(req.params.address, function (logs) {
-    res.render('logs', { title: "交易明細", logs: logs })
+    res.render('logs', { title: "交易明細", logs: logs, search: req.params.address })
   })
 })
 router.get('/transaction/:hash', function (req, res, next) {
@@ -130,6 +130,6 @@ router.post('/transaction/order', function (req, res, next) {
 })
 //交換
 router.post('/transaction/exchange', function (req, res, next) {
-  
+
 })
 module.exports = router;
