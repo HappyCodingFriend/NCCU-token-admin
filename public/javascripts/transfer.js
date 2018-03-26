@@ -25,7 +25,7 @@ $(document).ready(function () {
             //transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
             transfer($('#address').val(), value, privateKey, token, parseInt(nonce)).then(function (tx) {
                 console.log(tx);
-                $.post('/transaction', {
+                $.post('/transaction/transfer', {
                     tx: tx.rawTransaction
                 }, function (result) {
                     $('#transaciotns').prepend(syntaxHighlight(result) + '<hr>');

@@ -81,41 +81,55 @@ router.get('/nonce', function (req, res, next) {
     res.send(result.toString());
   });
 })
-
-//發送交易
-router.post('/transaction', function (req, res, next) {
+//發行點數
+router.post('/transaction/issue', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
     .on('receipt', function (result) {
-      //issue
-      if (result.contractAddress) {
-        web3.eth.getTransaction(result.transactionHash).then(function (point) {
-          mysql.addPoint(result.contractAddress, point.from)
-          res.send(result);
-        });
-      }
-      //order
-      else if (result.logs.length > 1) {
-        for (let i in result.logs) {
-          if (result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409') {
-            web3.eth.getTransaction(result.transactionHash).then(function (order) {
-              //result.logs[i].address 是 order address
-              mysql.addOrder(result.logs[i].address, order.from);
-              res.send(result.logs[i].address);
-            })
-          }
+      web3.eth.getTransaction(result.transactionHash).then(function (point) {
+        mysql.addPoint(result.contractAddress, point.from)
+        res.send(result);
+      });
+    })
+    .on('error', function (err) {
+      console.log(err);
+      res.send(err)
+    })
+})
+//transfer
+router.post('/transaction/transfer', function (req, res, next) {
+  web3.eth.sendSignedTransaction(req.body.tx)
+    .on('receipt', function (result) {
+      web3.eth.getTransaction(result.transactionHash).then(function (tx) {
+        mysql.addTransaction(tx.hash, tx.from, tx.to);
+        res.send(result);
+      });
+    })
+    .on('error', function (err) {
+      console.log(err);
+      res.send(err)
+    })
+})
+//掛單
+router.post('/transaction/order', function (req, res, next) {
+  web3.eth.sendSignedTransaction(req.body.tx)
+    .on('receipt', function (result) {
+      for (let i in result.logs) {
+        if (result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409') {
+          web3.eth.getTransaction(result.transactionHash).then(function (order) {
+            //result.logs[i].address 是 order address
+            mysql.addOrder(result.logs[i].address, order.from);
+            res.send(result.logs[i].address);
+          })
         }
-      }
-      //transfer
-      else {
-        web3.eth.getTransaction(result.transactionHash).then(function (tx) {
-          mysql.addTransaction(tx.hash, tx.from, tx.to);
-          res.send(result);
-        });
       }
     })
     .on('error', function (err) {
       console.log(err);
       res.send(err)
     })
+})
+//交換
+router.post('/transaction/exchange', function (req, res, next) {
+  
 })
 module.exports = router;

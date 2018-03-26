@@ -23,7 +23,7 @@ $(document).ready(function () {
             //sign function return promise
             addExchange(token1, token2, value1, value2, deadline, privateKey, nonce).then(function (tx) {
                 //send raw transaction
-                $.post('/transaction', {
+                $.post('/transaction/order', {
                     tx: tx.rawTransaction
                 }, function (result) {
                     location.reload();

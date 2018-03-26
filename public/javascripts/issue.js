@@ -21,7 +21,7 @@ $(document).ready(function () {
             //sign function return promise
             issue(name, totalSupply, deadline, privateKey, nonce).then(function (tx) {
                 //send raw transaction
-                $.post('/transaction', {
+                $.post('/transaction/issue', {
                     tx: tx.rawTransaction
                 }, function (result) {
                     if (result.contractAddress) {
