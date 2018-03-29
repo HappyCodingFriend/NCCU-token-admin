@@ -129,7 +129,17 @@ router.post('/transaction/order', function (req, res, next) {
     })
 })
 //交換
-router.post('/transaction/exchange', function (req, res, next) {
-
+router.post('/transaction/exchange/:address', function (req, res, next) {
+  web3.eth.sendSignedTransaction(req.body.tx)
+  .on('receipt', function (result) {
+    web3.eth.getTransaction(result.transactionHash).then(function (tx) {
+      mysql.finishOrder(req.params.address);
+      res.send(result);
+    });
+  })
+  .on('error', function (err) {
+    console.log(err);
+    res.send(err)
+  })
 })
 module.exports = router;
