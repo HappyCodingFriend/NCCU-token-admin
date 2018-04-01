@@ -37,8 +37,8 @@ function addExchange(token1, token2, value1, value2, deadline, privateKey, nonce
     return tx;
 
 }
-//買單(單子的合約位置，交換的token，交換的量，期限，私鑰，nonce)
-function doExchange(exchange, token, value, deadline, privateKey, nonce){
+//買單(單子的合約位置，交換的token，交換的量，私鑰，nonce)
+function doExchange(exchange, token, value, privateKey, nonce){
     let ERC223TokenContract = new web3.eth.Contract(contracts.ERC223Token.abi);
     let data = ERC223TokenContract.methods.transfer(exchange, value).encodeABI();
 
