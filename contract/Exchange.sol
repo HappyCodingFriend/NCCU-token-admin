@@ -241,15 +241,11 @@ contract Exchange is ContractReceiver{
         return deadline;
     }
     function tokenFallback(address _from, uint _value, bytes _data) public {
-        if(_value == a2 && valid){
-            doExchangeEvent(_from);
-            t1.transfer(_from, a1);
-            t2.transfer(owner, _value);
-            valid = false;
-        }
-        else{
-            t2.transfer(_from, _value);
-        }
+        require(_value == a2 && valid);
+        doExchangeEvent(_from);
+        t1.transfer(_from, a1);
+        t2.transfer(owner, _value);
+        valid = false;
     }
     function cancel() public {
         require(owner == msg.sender);
