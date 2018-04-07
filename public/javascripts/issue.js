@@ -22,27 +22,18 @@ $(document).ready(function () {
             issue(name, totalSupply, deadline, privateKey, nonce).then(function (tx) {
                 //send raw transaction
                 $.post('/transaction/issue', {
+                    name: name,
+                    deadline: deadline,
                     tx: tx.rawTransaction
                 }, function (result) {
                     if (result.contractAddress) {
-                        $('#contracts').append(name + ' : ' + result.contractAddress + "<br>")
+                        location.reload();
                     }
                     else {
-                        console.log(result)
+                        alert(result)
                     }
                 })
             });
         })
     })
-    $('#clear').click(function(){
-        $('#contracts').html('')
-    })
-
 });
-window.onload = function() {
-    let list = localStorage.getItem('list');
-    if (list !== null) $('#contracts').html(list);
-}
-window.onbeforeunload = function() {
-    localStorage.setItem('list', $('#contracts').html());
-}

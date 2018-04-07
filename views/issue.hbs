@@ -1,6 +1,7 @@
-<div class="container">
-    <h1>發行點數</h1>
-    <div class="col-md-3">
+<div class="container-fluid">
+    <div class="col-md-3 card">
+        <h2>發行點數</h2>
+        <hr>
         <div class="form-group">
             <label for="name">名稱</label>
             <input class="form-control" id="name" type="text">
@@ -14,21 +15,37 @@
             <input type="date" class="form-control" id="deadline" value="2018-12-31">
         </div>
         <div class="form-group">
-            <label for="keyfile">input your keyfile</label>
+            <label for="keyfile">輸入keyfile</label>
             <input type="file" class="form-control" id="keyfile">
         </div>
         <div class="form-group">
-            <label for="pwd">input your password</label>
+            <label for="pwd">輸入密碼</label>
             <input type="password" class="form-control" id="pwd">
         </div>
 
         <button type="button" class="btn btn-success" id="issue">發行</button>
     </div>
-    <div class="col-md-9">
-        <div class="form-group" style="height:500px;overflow:scroll;">
-            <p id="contracts"></p>
-        </div>
-        <button id="clear" class="btn btn-success" style="float:right;">clear</button>
+    <div class="col-md-8 card detail">
+        <h2>發行紀錄</h2>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th style="width:20%">名稱</th>
+                    <th style="width:60%">地址</th>
+                    <th style="width:20%">到期日</th>
+                </tr>
+            </thead>
+            <tbody>
+            {{#each points}}
+            <tr>
+                <th>{{name}}</a></th>
+                <th>{{address}}</a></th>
+                <th>{{deadline}}</a></th>
+            </tr>
+            {{/each}}
+            </tbody>
+        </table>
     </div>
 </div>
 

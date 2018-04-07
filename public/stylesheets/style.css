@@ -1,8 +1,79 @@
-body {
-  padding: 50px;
-  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+@import url(https://fonts.googleapis.com/earlyaccess/notosanstc.css);
+.navbar {
+    min-height: 35px;
+    background-color: white;
 }
 
-a {
-  color: #00B7FF;
+.navbar-brand {
+    padding: 0 45px;
+    height: 50px;
+    line-height: 50px;
+    font-size: 20px;
+    font-family: STXihei, 'Noto Sans TC', sans-serif;
+    font-weight: 100;
+}
+  
+@media (min-width: 768px) {
+    .navbar-nav > li > a {
+      /* (80px - line-height of 27px) / 2 = 26.5px */
+      padding-top: 12.5px;
+      padding-bottom: 12.5px;
+      padding-right: 25px;
+      line-height: 25px;
+    }
+}
+
+html, body{
+    font-family: 'Noto Sans TC', sans-serif, STXihei;
+    font-weight: 100;
+    background-color: rgb(247, 247, 247);
+}
+
+h2{
+    font-family: 'Noto Sans TC', sans-serif, STXihei;
+    font-weight: 400;
+}
+
+.bg{
+    background-color: rgb(247, 247, 247);
+    height: 100%;
+}
+
+
+.card {
+    height: 520px;
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    padding: 10px 10px;
+    margin-left: 20px;
+    background-color: white;
+}
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.card-sm{
+    height: 350px;
+}
+
+.detail{
+    overflow-y: scroll;
+}
+.detail::-webkit-scrollbar-track
+{
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);
+	border-radius: 10px;
+	background-color: #F5F5F5;
+}
+.detail::-webkit-scrollbar{
+	width: 6px;
+	background-color: #F5F5F5;
+}
+.detail::-webkit-scrollbar-thumb{
+    border-radius: 10px;
+    box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
+	background-color: lightblue;
 }

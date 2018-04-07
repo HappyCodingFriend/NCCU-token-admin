@@ -10,7 +10,9 @@ const contracts = JSON.parse(fs.readFileSync('./contract/contracts.json'));
 const mysql = require('../lib/mysql.js');
 /* GET home page. */
 router.get('/', function (req, res, next) {
-  res.render('issue', { title: "發行點數" });
+  mysql.getPointIsValid(function (points) {
+    res.render('issue', { title: "發行點數", points: points });
+  })
 });
 router.get('/transfer', function (req, res, next) {
   res.render('transfer', { title: "發送點數" });
@@ -86,7 +88,8 @@ router.post('/transaction/issue', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
     .on('receipt', function (result) {
       web3.eth.getTransaction(result.transactionHash).then(function (point) {
-        mysql.addPoint(result.contractAddress, point.from)
+        let deadline = new Date(parseInt(req.body.deadline, 10)).toISOString().slice(0, 19).replace('T', ' ')
+        mysql.addPoint(result.contractAddress, req.body.name, point.from, deadline)
         res.send(result);
       });
     })
@@ -131,15 +134,15 @@ router.post('/transaction/order', function (req, res, next) {
 //交換
 router.post('/transaction/exchange/:address', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
-  .on('receipt', function (result) {
-    web3.eth.getTransaction(result.transactionHash).then(function (tx) {
-      mysql.finishOrder(req.params.address);
-      res.send(result);
-    });
-  })
-  .on('error', function (err) {
-    console.log(err);
-    res.send(err)
-  })
+    .on('receipt', function (result) {
+      web3.eth.getTransaction(result.transactionHash).then(function (tx) {
+        mysql.finishOrder(req.params.address);
+        res.send(result);
+      });
+    })
+    .on('error', function (err) {
+      console.log(err);
+      res.send(err)
+    })
 })
 module.exports = router;

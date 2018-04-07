@@ -1,66 +1,64 @@
-<div class="container">
-    <br>
-    <h1>交易點數</h1>
-    <div class="row">
-        <div class="col-md-4">
-            <br>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="token1">點數1</label>
-                    <input class="form-control" id="token1" type="text">
-                </div>
-                <div class="form-group">
-                    <label for="value1">數量</label>
-                    <input class="form-control" id="value1" type="number" min="0" value="0">
-                </div>
+<div class="container-fluid">
+    <div class="col-md-4 card">
+        <h2>交易點數</h2>
+        <hr>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="token1">點數1</label>
+                <input class="form-control" id="token1" type="text">
             </div>
-            <div class="col-md-6">
-                <div class="form-group">
-                    <label for="token2">點數2</label>
-                    <input class="form-control" id="token2" type="text">
-                </div>
-                <div class="form-group">
-                    <label for="value2">數量</label>
-                    <input class="form-control" id="value2" type="number" min="0" value="0">
-                </div>
-            </div>
-            <div class="col-md-12">
-                <div class="form-group">
-                    <label for="deadline">到期日</label>
-                    <input type="date" class="form-control" id="deadline" value="2018-12-31">
-                </div>
-                <div class="form-group">
-                    <label for="keyfile">input your keyfile</label>
-                    <input type="file" class="form-control" id="keyfile">
-                </div>
-                <div class="form-group">
-                    <label for="pwd">input your password</label>
-                    <input type="password" class="form-control" id="pwd">
-                </div>
-                <button type="button" class="btn btn-success" id="issue">發行</button>
+            <div class="form-group">
+                <label for="value1">數量</label>
+                <input class="form-control" id="value1" type="number" min="0" value="0">
             </div>
         </div>
-        <div class="col-md-8">
-            <table class="table">
-                <thead>
-                    <tr>
-                        <th>Order Address</th>
-                        <th>Owner</th>
-                        <th>buy</th>
-                    </tr>
-                </thead>
-                <tbody id="list">
-                    {{#each orders}}
-                    <tr>
-                        <th>{{address}}</th>
-                        <th>{{owner}}</th>
-                        <th><a href="#" id="buy">buy</a></th>
-                    </tr>
-                    {{/each}}
-                </tbody>
-            </table>
+        <div class="col-md-6">
+            <div class="form-group">
+                <label for="token2">點數2</label>
+                <input class="form-control" id="token2" type="text">
+            </div>
+            <div class="form-group">
+                <label for="value2">數量</label>
+                <input class="form-control" id="value2" type="number" min="0" value="0">
+            </div>
+        </div>
+        <div class="col-md-12">
+            <div class="form-group">
+                <label for="deadline">到期日</label>
+                <input type="date" class="form-control" id="deadline" value="2018-12-31">
+            </div>
+            <div class="form-group">
+                <label for="keyfile">input your keyfile</label>
+                <input type="file" class="form-control" id="keyfile">
+            </div>
+            <div class="form-group">
+                <label for="pwd">input your password</label>
+                <input type="password" class="form-control" id="pwd">
+            </div>
+            <button type="button" class="btn btn-success" id="issue">發行</button>
         </div>
     </div>
+    <div class="col-md-7 card detail">
+        <h2>訂單資料</h2>
+        <hr>
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>Order Address</th>
+                    <th>Owner</th>
+                </tr>
+            </thead>
+            <tbody id="list">
+                {{#each orders}}
+                <tr>
+                    <th>{{address}}</th>
+                    <th>{{owner}}</th>
+                </tr>
+                {{/each}}
+            </tbody>
+        </table>
+    </div>
+</div>
 </div>
 
 <script src="./javascripts/order.js"></script>

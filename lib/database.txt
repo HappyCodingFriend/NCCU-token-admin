@@ -7,7 +7,9 @@ CREATE TABLE `orders` (
 
 CREATE TABLE `point` (
   `address` varchar(65) NOT NULL,
+  `name` varchar(45) NOT NULL,
   `owner` varchar(65) NOT NULL,
+  `deadline` datetime NOT NULL,
   `valid` tinyint(4) NOT NULL DEFAULT '1',
   PRIMARY KEY (`address`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
@@ -17,4 +19,16 @@ CREATE TABLE `transaction` (
   `from_addr` varchar(65) NOT NULL,
   `point` varchar(65) NOT NULL,
   PRIMARY KEY (`txhash`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `auth` (
+  `id` varchar(20) NOT NULL,
+  `address` varchar(60) NOT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `admin` (
+  `id` varchar(20) NOT NULL,
+  `password` varchar(20) NOT NULL,
+  PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

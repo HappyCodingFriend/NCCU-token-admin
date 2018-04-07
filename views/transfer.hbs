@@ -1,6 +1,7 @@
-<div class="container">
-    <h1>發送點數</h1>
-    <div class="col-md-3">
+<div class="container-fluid">
+    <div class="col-md-3 card">
+        <h2>發送點數</h2>
+        <hr>
         <div class="form-group">
             <label for="token1">token地址</label>
             <input class="form-control" id="token1" type="text">
@@ -9,27 +10,9 @@
             <label for="value">數量</label>
             <input type="number" class="form-control" id="value" min="0" value="0">
         </div>
-    </div>
-    <div class="col-md-4">
-        <label for="to">目標地址</label>
-        <div id="list"  class="form-group"> <!--style="height:300px;overflow:scroll;"-->
+        <div class="form-group">
             <label for="address">帳戶地址</label>
             <input class="form-control" id="address" type="text">
-            <!--<div>
-                <label style="display: block;">
-                    <input type="checkbox" id="to" value="1ae8e162bd5f29755e61131d7d379d1b0ff582dd"> 103703017 賴晨禾 0x1ae8e162bd5f29755e61131d7d379d1b0ff582dd
-                </label>
-            </div>
-            <div>
-                <label>
-                    <input type="checkbox" id="to" value="728609a0ac795acb8b7c7df9a8f334143da79d74">103703030 邱 天 0x728609a0ac795acb8b7c7df9a8f334143da79d74
-                </label>
-            </div>
-            <div>
-                <label>
-                    <input type="checkbox" id="to" value="8d6e4804441f331283bda1a3ceb8b3544a3db6f9">103703015 彭麒家 0x8d6e4804441f331283bda1a3ceb8b3544a3db6f9
-                </label>
-            </div>-->
         </div>
         <div class="form-group">
             <label for="keyfile">input your keyfile</label>
@@ -41,25 +24,9 @@
         </div>
         <button type="button" class="btn btn-success" id="transfer">確認</button>
     </div>
-    <div class="col-md-5">
-        <!--
-            <label for="to">增加目標地址</label>
-        <div class="form-group">
-            <label for="stdnumber">學號</label>
-            <input type="text" class="form-control" id="stdnumber">
-        </div>
-        <div class="form-group">
-            <label for="name">姓名</label>
-            <input type="text" class="form-control" id="name">
-        </div>
-        <div class="form-group">
-            <label for="address">帳戶地址</label>
-            <input type="text" class="form-control" id="address">
-        </div>
-        <button type="button" class="btn btn-success" id="addPerson">新增</button>
-        -->
-        <div id="transaciotns" style="height:280px;overflow:scroll;">
-        </div>
+    <div class="col-md-8 card detail" id="transaciotns">
+        <h2>詳細資料</h2>
+        <hr>
     </div>
 </div>
 
