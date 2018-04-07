@@ -14,7 +14,7 @@ $(document).ready(function () {
         let token2 = $('#token2').val();
         let value1 = $('#value1').val();
         let value2 = $('#value2').val();
-        let deadline = (new Date(new Date($('#deadline').val()) - 8 * 60 * 60 * 1000)).valueOf();
+        let deadline = new Date($('#deadline').val()).valueOf();
         let privateKey = web3.eth.accounts.decrypt(keyfile, $("#pwd").val()).privateKey;
         //取的nonce
         $.get('/nonce', {
