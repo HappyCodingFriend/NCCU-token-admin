@@ -1,9 +1,13 @@
 <div class="container-fluid">
     <div class="col-md-3 card">
-        <h2>發行點數</h2>
+        <h2>發行新點數</h2>
         <hr>
         <div class="form-group">
-            <label for="name">名稱</label>
+            <label for="unit">發行單位</label>
+            <input type="text" class="form-control" id="unit">
+        </div>
+        <div class="form-group">
+            <label for="name">點數名稱</label>
             <input class="form-control" id="name" type="text">
         </div>
         <div class="form-group">
@@ -15,15 +19,31 @@
             <input type="datetime-local" class="form-control" id="deadline">
         </div>
         <div class="form-group">
-            <label for="keyfile">輸入keyfile</label>
+            <label for="keyfile">輸入憑證檔案(keyfile)</label>
             <input type="file" class="form-control" id="keyfile">
         </div>
-        <div class="form-group">
-            <label for="pwd">輸入密碼</label>
-            <input type="password" class="form-control" id="pwd">
-        </div>
+        <button type="button" class="btn btn-success" data-toggle="modal" data-target="#inpwd">發行</button>
+        <!-- Modal -->
+        <div class="modal fade" id="inpwd" role="dialog">
+            <div class="modal-dialog modal-sm">
+                <!-- Modal content-->
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        <h4 class="modal-title">輸入憑證密碼</h4>
+                    </div>
+                    <div class="modal-body">
 
-        <button type="button" class="btn btn-success" id="issue">發行</button>
+                        <div class="form-group">
+                            <input type="password" class="form-control" id="pwd">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" id="issue">確認</button>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-md-8 card detail">
         <h2>發行紀錄</h2>
@@ -31,19 +51,25 @@
         <table class="table table-striped">
             <thead>
                 <tr>
-                    <th style="width:20%">名稱</th>
-                    <th style="width:60%">地址</th>
+                    <th style="width:10%">發行單位</th>
+                    <th style="width:20%">點數名稱</th>
+                    <th style="width:50%">點數地址</th>
                     <th style="width:20%">到期日</th>
                 </tr>
             </thead>
             <tbody>
-            {{#each points}}
-            <tr>
-                <th>{{name}}</a></th>
-                <th>{{address}}</a></th>
-                <th>{{deadline}}</a></th>
-            </tr>
-            {{/each}}
+                {{#each points}}
+                <tr>
+                    <th>{{unit}}</a>
+                    </th>
+                    <th>{{name}}</a>
+                    </th>
+                    <th>{{address}}</a>
+                    </th>
+                    <th>{{datetime deadline}}</a>
+                    </th>
+                </tr>
+                {{/each}}
             </tbody>
         </table>
     </div>

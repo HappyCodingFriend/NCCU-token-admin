@@ -29,7 +29,7 @@ html, body{
     background-color: rgb(247, 247, 247);
 }
 
-h2{
+h2, h4{
     font-family: 'Noto Sans TC', sans-serif, STXihei;
     font-weight: 400;
 }
@@ -76,4 +76,8 @@ h2{
     box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,.3);
 	background-color: lightblue;
+}
+
+.modal-sm{
+    width: 30%;
 }

@@ -10,9 +10,10 @@ $(document).ready(function () {
         reader.readAsText(file)
     })
     $('#issue').click(function () {
+        let unit = $('#unit').val();
         let name = $('#name').val();
         let totalSupply = $('#totalSupply').val();
-        let deadline = new Date($('#deadline').val()).valueOf();
+        let deadline = (new Date(new Date($('#deadline').val()) + 8 * 60 * 60 * 1000)).valueOf();
         let privateKey = web3.eth.accounts.decrypt(keyfile, $("#pwd").val()).privateKey;
         //取的nonce
         $.get('/nonce', {
@@ -22,6 +23,7 @@ $(document).ready(function () {
             issue(name, totalSupply, deadline, privateKey, nonce).then(function (tx) {
                 //send raw transaction
                 $.post('/transaction/issue', {
+                    unit: unit,
                     name: name,
                     deadline: deadline,
                     tx: tx.rawTransaction

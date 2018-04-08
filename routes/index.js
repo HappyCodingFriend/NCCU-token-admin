@@ -4,10 +4,13 @@ var router = express.Router();
 const Web3 = require('web3');
 const web3 = new Web3('http://localhost:8545');
 
+const hbs = require('hbs');
+
 const fs = require('fs');
 const contracts = JSON.parse(fs.readFileSync('./contract/contracts.json'));
 
 const mysql = require('../lib/mysql.js');
+
 /* GET home page. */
 router.get('/', function (req, res, next) {
   mysql.getPointIsValid(function (points) {
@@ -88,8 +91,8 @@ router.post('/transaction/issue', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
     .on('receipt', function (result) {
       web3.eth.getTransaction(result.transactionHash).then(function (point) {
-        let deadline = new Date(parseInt(req.body.deadline, 10)).toISOString().slice(0, 19).replace('T', ' ')
-        mysql.addPoint(result.contractAddress, req.body.name, point.from, deadline)
+        let deadline = new Date(parseInt(req.body.deadline, 10)).toLocaleString()
+        mysql.addPoint(result.contractAddress, req.body.unit, req.body.name, point.from, deadline)
         res.send(result);
       });
     })
@@ -144,5 +147,9 @@ router.post('/transaction/exchange/:address', function (req, res, next) {
       console.log(err);
       res.send(err)
     })
+})
+hbs.registerHelper('datetime', function(datetime){
+    var d = new Date(datetime);
+    return d.toLocaleString();
 })
 module.exports = router;
