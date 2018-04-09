@@ -22,9 +22,11 @@ $(document).ready(function () {
             transfer($('#address').val(), value, privateKey, token, parseInt(nonce)).then(function (tx) {
                 console.log(tx);
                 $.post('/transaction/transfer', {
-                    tx: tx.rawTransaction
+                    tx: tx.rawTransaction,
+                    number: value
                 }, function (result) {
                     $('#transaciotns').append(syntaxHighlight(result) + '<hr>');
+                    $('#inpwd').modal('hide');
                 });
             });
         });

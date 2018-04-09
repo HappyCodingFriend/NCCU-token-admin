@@ -106,7 +106,7 @@ router.post('/transaction/transfer', function (req, res, next) {
   web3.eth.sendSignedTransaction(req.body.tx)
     .on('receipt', function (result) {
       web3.eth.getTransaction(result.transactionHash).then(function (tx) {
-        mysql.addTransaction(tx.hash, tx.from, tx.to);
+        mysql.addTransaction('System', "null", req.body.number, tx.to, tx.hash);
         res.send(result);
       });
     })
