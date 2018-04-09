@@ -23,19 +23,35 @@
             </div>
         </div>
         <div class="col-md-12">
-            <div class="form-group">
+            <div class="form-group" style="margin:20px 0 30px 0;">
                 <label for="deadline">到期日</label>
                 <input type="datetime-local" class="form-control" id="deadline">
             </div>
-            <div class="form-group">
-                <label for="keyfile">input your keyfile</label>
+            <div class="form-group" style="margin-bottom:30px;">
+                <label for="keyfile">輸入憑證檔案(keyfile)</label>
                 <input type="file" class="form-control" id="keyfile">
             </div>
-            <div class="form-group">
-                <label for="pwd">input your password</label>
-                <input type="password" class="form-control" id="pwd">
+            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#inpwd">發行</button>
+            <!-- Modal -->
+            <div class="modal fade" id="inpwd" role="dialog">
+                <div class="modal-dialog modal-sm">
+                    <!-- Modal content-->
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                            <h4 class="modal-title">輸入憑證密碼</h4>
+                        </div>
+                        <div class="modal-body">
+                            <div class="form-group">
+                                <input type="password" class="form-control" id="pwd">
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-success" id="issue">確認</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <button type="button" class="btn btn-success" id="issue">發行</button>
         </div>
     </div>
     <div class="col-md-7 card detail">
