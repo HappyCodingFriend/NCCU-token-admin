@@ -25,9 +25,9 @@ $(document).ready(function () {
                 //send raw transaction
                 $.post('/transaction/order', {
                     tx: tx.rawTransaction,
-                    point1: point1,
+                    point1: token1,
                     value1: value1,
-                    point2: point2,
+                    point2: token2,
                     value2: value2
                 }, function (result) {
                     location.reload();

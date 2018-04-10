@@ -123,7 +123,7 @@ router.post('/transaction/order', function (req, res, next) {
         if (result.logs[i].topics[0] == '0x0453a1fb3a773dbebdf89a3b20c719c82a91ac83a7a7db37386cb4572307f409') {
           web3.eth.getTransaction(result.transactionHash).then(function (order) {
             //result.logs[i].address 是 order address
-            mysql.addOrder(result.logs[i].address, order.from);
+            mysql.addOrder(result.logs[i].address, order.from, req.body.point1, req.body.value1, req.body.point2, req.body.value2);
             res.send(result.logs[i].address);
           })
         }

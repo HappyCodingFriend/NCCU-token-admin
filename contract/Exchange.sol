@@ -192,6 +192,7 @@ contract ERC223Token is SafeMath {
     }
     
     function addExchange(ERC223Token t, uint a1, uint a2, uint64 _deadline) public {
+        require(balanceOf(msg.sender) >= a1);
         bytes memory _empty;
         Exchange ex = new Exchange(msg.sender, this, t, a1, a2,  _deadline);
         transferToAddress(ex, a1, _empty);
