@@ -268,24 +268,15 @@ contract Order is Owned{
         FixedSupplyToken bt = orders[hash].buyToken;
         uint sv = orders[hash].sellValue;
         uint bv = orders[hash].buyValue;
-        if(valid[hash]) {
-            emit TradeError(hash, "Order is invalid.");
-            return false;
-        }
-        else if(st.allowance(orderOwner, owner) < sv || st.balanceOf(orderOwner) < sv) {
-            emit TradeError(hash, "Order's owner doesn't have enough token.");
-            return false;
-        }
-        else if(bt.allowance(orderOwner, owner) < bv || bt.balanceOf(orderOwner) < bv){
-            emit TradeError(hash, "Buyer doesn't have enough token.");
-            return false;
-        }
-        else {
-            st.transferFrom(orderOwner, buyer, sv);
-            bt.transferFrom(buyer, orderOwner, bv);
-            emit TradeEvent(hash, buyer);
-            return true;
-        }
+        
+        require(valid[hash],"Order is invalid.");
+        require(st.allowance(orderOwner, owner) < sv || st.balanceOf(orderOwner) < sv, "Order's owner doesn't have enough token.");
+        require(bt.allowance(orderOwner, owner) < bv || bt.balanceOf(orderOwner) < bv, "Buyer doesn't have enough token.");
+        
+        st.transferFrom(orderOwner, buyer, sv);
+        bt.transferFrom(buyer, orderOwner, bv);
+        emit TradeEvent(hash, buyer);
+        return true;
     }
     function watchOrder(bytes32 hash) public view returns (address,FixedSupplyToken,FixedSupplyToken,uint,uint) {
         return (orders[hash].owner, orders[hash].sellToken, orders[hash].buyToken, orders[hash].sellValue, orders[hash].buyValue);
