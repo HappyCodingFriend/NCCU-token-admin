@@ -1,41 +1,51 @@
-pragma solidity ^0.4.19;
+pragma solidity ^0.4.23;
  
-contract SafeMath {
-    uint256 constant public MAX_UINT256 =
-    0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF;
-
-    function safeAdd(uint256 x, uint256 y) pure internal returns (uint256 z) {
-        require (x <= MAX_UINT256 - y);
-        return x + y;
+library SafeMath {
+    function add(uint a, uint b) internal pure returns (uint c) {
+        c = a + b;
+        require(c >= a);
     }
-
-    function safeSub(uint256 x, uint256 y) pure internal returns (uint256 z) {
-        require (x >= y);
-        return x - y;
+    function sub(uint a, uint b) internal pure returns (uint c) {
+        require(b <= a);
+        c = a - b;
     }
-
-    function safeMul(uint256 x, uint256 y) pure internal returns (uint256 z) {
-        if (y == 0) return 0;
-        require (x <= MAX_UINT256 / y);
-        return x * y;
+    function mul(uint a, uint b) internal pure returns (uint c) {
+        c = a * b;
+        require(a == 0 || c / a == b);
+    }
+    function div(uint a, uint b) internal pure returns (uint c) {
+        require(b > 0);
+        c = a / b;
     }
 }
 
 contract ContractReceiver {
     function tokenFallback(address _from, uint _value, bytes _data) public;
 }
-contract ERC223Token is SafeMath {
+
+contract ERC223Interface {
+    function totalSupply() public constant returns (uint);
+    function balanceOf(address who) public constant returns (uint);
+    function transfer(address to, uint value) public returns (bool success);
+    function transfer(address to, uint value, bytes data) public returns (bool success);
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining);
+    function approve(address spender, uint tokens) public returns (bool success);
+    function transferFrom(address from, address to, uint tokens) public returns (bool success);
     
-    event Transfer(address indexed _from, address indexed _to, uint256 _value, bytes _data);
-    event Approval(address _third, uint _value);
+    event Transfer(address indexed from, address indexed to, uint value, bytes data);
+    event Approval(address indexed tokenOwner, address indexed spender, uint tokens);
+}
+
+contract ERC223Token is ERC223Interface  {
+    using SafeMath for uint;
     
-    mapping(address => uint) approval;
+    mapping(address => mapping(address => uint)) allowed;
     mapping(address => uint) balances;
     
     string public name;
     string public symbol;
     uint8 public decimals;
-    uint256 public totalSupply;
+    uint256 public _totalSupply;
     uint64 public deadline;
     bool public valid = true;
     
@@ -44,55 +54,40 @@ contract ERC223Token is SafeMath {
     
     uint price = 0;
     
-    function ERC223Token(string _name, string _symbol, uint8 _decimals, uint256 _totalSupply, uint64 _deadline) public {
+    constructor(string _name, string _symbol, uint8 _decimals, uint256 __totalSupply, uint64 _deadline) public {
         name = _name;
         symbol = _symbol;
         decimals = _decimals;
-        balances[msg.sender] = _totalSupply * (10 ** uint256(decimals));
-        totalSupply = balances[msg.sender];
+        balances[msg.sender] = __totalSupply * (10 ** uint256(decimals));
+        _totalSupply = balances[msg.sender];
         deadline = _deadline;
         owner = msg.sender;
+        emit Transfer(address(0), owner, _totalSupply, "Issue.");
     }
     
     modifier isOwner(){
         if(owner == msg.sender)
             _;
     }
-    modifier isAuth(){
-        if(auth[msg.sender])
-            _;
+    
+    // Function to access total supply of tokens .
+    function totalSupply() public constant returns (uint) {
+        return _totalSupply;
     }
     
-    // Function to access name of token .
-    function name() public constant returns (string _name) {
-        return name;
-    }
-    // Function to access symbol of token .
-    function symbol() public constant returns (string _symbol) {
-        return symbol;
-    }
-    // Function to access decimals of token .
-    function decimals() public constant returns (uint8 _decimals) {
-        return decimals;
-    }
-    // Function to access total supply of tokens .
-    function totalSupply() public constant returns (uint256 _totalSupply) {
-        return totalSupply;
-    }
     function valid() public constant returns (bool _valid) {
         return valid;
     }
-    
     
     // Function that is called when a user or another contract wants to transfer funds .
     function transfer(address _to, uint _value, bytes _data, string _custom_fallback) public returns (bool success) {
         require(valid);
         if(isContract(_to)) {
             require (balanceOf(msg.sender) >= _value);
-            balances[msg.sender] = safeSub(balanceOf(msg.sender), _value);
-            balances[_to] = safeAdd(balanceOf(_to), _value);
+            balances[msg.sender] = balances[msg.sender].sub(_value);
+            balances[_to] = balances[_to].add(_value);
             assert(_to.call.value(0)(bytes4(keccak256(_custom_fallback)), msg.sender, _value, _data));
-            Transfer(msg.sender, _to, _value, _data);
+            emit Transfer(msg.sender, _to, _value, _data);
             return true;
         }
         else {
@@ -140,45 +135,53 @@ contract ERC223Token is SafeMath {
     //function that is called when transaction target is an address
     function transferToAddress(address _to, uint _value, bytes _data) private returns (bool success) {
         require (balanceOf(msg.sender) >= _value);
-        balances[msg.sender] = safeSub(balanceOf(msg.sender), _value);
-        balances[_to] = safeAdd(balanceOf(_to), _value);
-        Transfer(msg.sender, _to, _value, _data);
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
+        emit Transfer(msg.sender, _to, _value, _data);
         return true;
     }
     
     //function that is called when transaction target is a contract
     function transferToContract(address _to, uint _value, bytes _data) private returns (bool success) {
         require (balanceOf(msg.sender) >= _value);
-        balances[msg.sender] = safeSub(balanceOf(msg.sender), _value);
-        balances[_to] = safeAdd(balanceOf(_to), _value);
+        balances[msg.sender] = balances[msg.sender].sub(_value);
+        balances[_to] = balances[_to].add(_value);
         ContractReceiver receiver = ContractReceiver(_to);
         receiver.tokenFallback(msg.sender, _value, _data);
-        Transfer(msg.sender, _to, _value, _data);
+        emit Transfer(msg.sender, _to, _value, _data);
         return true;
     }
     
-    function transferFromAtoB(address _from, address _to, uint _value) isOwner public returns (bool success) {
-        require(balanceOf(_from) >= _value);
-        bytes memory empty;
-        balances[_from] = safeSub(balanceOf(_from), _value);
-        balances[_to] = safeAdd(balanceOf(_to), _value);
-        Transfer(_from, _to, _value, empty);
-        return true;
+    function allowance(address tokenOwner, address spender) public constant returns (uint remaining) {
+        return allowed[tokenOwner][spender];
     }
-    function transferFromAuth(address _to, uint _value) isAuth public returns (bool success) {
-        require(approval[msg.sender] >= _value);
-        bytes memory empty;
-        balances[owner] = safeSub(balanceOf(owner), _value);
-        balances[_to] = safeAdd(balanceOf(_to), _value);
-        Transfer(owner, _to, _value, empty);
+    
+    function approve(address spender, uint tokens) public returns (bool success) {
+        allowed[msg.sender][spender] = tokens;
+        emit Approval(msg.sender, spender, tokens);
         return true;
     }
     
-    function approve(address _third, uint _value) isOwner public {
-        if(!auth[_third]){
-            auth[_third] = true;
-        }
-        approval[_third] = _value;
+    function transferFrom(address from, address to, uint tokens) public returns (bool success) {
+        bytes memory empty;
+        balances[from] = balances[from].sub(tokens);
+        allowed[from][msg.sender] = allowed[from][msg.sender].sub(tokens);
+        balances[to] = balances[to].add(tokens);
+        emit Transfer(from, to, tokens, empty);
+        return true;
+    }
+    
+    function transferFromAtoB(address from, address to, uint value) isOwner public returns (bool success) {
+        require(balanceOf(from) >= value);
+        bytes memory empty;
+        balances[from] = balances[from].sub(value);
+        balances[to] = balances[to].add(value);
+        emit Transfer(from, to, value, empty);
+        return true;
+    }
+
+    function balanceOf(address _owner) public constant returns (uint balance) {
+        return balances[_owner];
     }
     
     function time(uint64 _now) isOwner public {
@@ -186,11 +189,14 @@ contract ERC223Token is SafeMath {
             valid = false;
         }
     }
-
-    function balanceOf(address _owner) public constant returns (uint balance) {
-        return balances[_owner];
-    }
     
+    function () public payable {
+        revert();
+    }
+
+    function transferAnyToken(address tokenAddress, uint tokens) public isOwner returns (bool success) {
+        return ERC223Interface(tokenAddress).transfer(owner, tokens);
+    }
     function addExchange(ERC223Token t, uint a1, uint a2, uint64 _deadline) public {
         require(balanceOf(msg.sender) >= a1);
         bytes memory _empty;
@@ -202,8 +208,8 @@ contract ERC223Token is SafeMath {
 contract Exchange is ContractReceiver{
     
     address owner;
-    ERC223Token t1;
-    ERC223Token t2;
+    address t1;
+    address t2;
     uint a1;
     uint a2;
     uint64 deadline;
@@ -213,7 +219,7 @@ contract Exchange is ContractReceiver{
     event doExchangeEvent(address from);
     event cancelExchangeEvent(address addr);
     
-    function Exchange(address _owner, ERC223Token _t1, ERC223Token _t2, uint _a1, uint _a2, uint64 _deadline) public {
+    constructor(address _owner, address _t1, address _t2, uint _a1, uint _a2, uint64 _deadline) public {
         owner = _owner;
         t1 = _t1;
         t2 = _t2;
@@ -221,12 +227,12 @@ contract Exchange is ContractReceiver{
         a2 = _a2;
         deadline = _deadline;
         valid = true;
-        addExchangeEvent(_owner);
+        emit addExchangeEvent(_owner);
     }
-    function getT1() public constant returns(ERC223Token){
+    function getT1() public constant returns(address){
         return t1;
     }
-    function getT2() public constant returns(ERC223Token){
+    function getT2() public constant returns(address){
         return t2;
     }
     function getA1() public constant returns(uint){
@@ -243,16 +249,16 @@ contract Exchange is ContractReceiver{
     }
     function tokenFallback(address _from, uint _value, bytes _data) public {
         require(_value == a2 && valid);
-        doExchangeEvent(_from);
-        t1.transfer(_from, a1);
-        t2.transfer(owner, _value);
+        emit doExchangeEvent(_from);
+        ERC223Interface(t1).transfer(_from, a1);
+        ERC223Interface(t2).transfer(owner, _value);
         valid = false;
     }
     function cancel() public {
         require(owner == msg.sender);
-        t1.transfer(owner, a1);
+        ERC223Interface(t1).transfer(owner, a1);
         valid = false;
-        cancelExchangeEvent(this);
+        emit cancelExchangeEvent(this);
     }
     function time(uint64 _time) public {
         if(_time >= deadline){

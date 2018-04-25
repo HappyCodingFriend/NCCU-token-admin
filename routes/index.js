@@ -148,6 +148,20 @@ router.post('/transaction/exchange/:address', function (req, res, next) {
       res.send(err)
     })
 })
+//取消掛單(tx, address)
+router.delete('/transaction/order/:address', function (req, res, next) {
+  web3.eth.sendSignedTransaction(req.body.tx)
+    .on('receipt', function (result) {
+      web3.eth.getTransaction(result.transactionHash).then(function (tx) {
+        mysql.finishOrder(req.params.address);
+        res.send(result);
+      });
+    })
+    .on('error', function (err) {
+      console.log(err);
+      res.send(err)
+    })
+})
 hbs.registerHelper('datetime', function(datetime){
     var d = new Date(datetime);
     return d.toLocaleString();

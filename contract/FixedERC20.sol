@@ -228,8 +228,8 @@ contract FixedSupplyToken is ERC20Interface, Owned {
 contract Order is Owned{
     struct order{
         address owner;
-        FixedSupplyToken sellToken;
-        FixedSupplyToken buyToken;
+        address sellToken;
+        address buyToken;
         uint sellValue;
         uint buyValue;
     }
@@ -242,7 +242,7 @@ contract Order is Owned{
     event TradeEvent(bytes32 _hash, address _buyer);
     event TradeError(bytes32 _hash, string _message);
     
-    function addOrder(FixedSupplyToken _sellToken, FixedSupplyToken _buyToken, uint _sellValue, uint _buyValue, uint nonce) public returns (bool success) {
+    function addOrder(address _sellToken, address _buyToken, uint _sellValue, uint _buyValue, uint nonce) public returns (bool success) {
         bytes32 hash = keccak256(msg.sender, _sellToken, _buyToken, _sellValue, _buyValue, nonce);
         orders[hash] = order({
             owner: msg.sender,
@@ -264,21 +264,21 @@ contract Order is Owned{
     
     function trade(bytes32 hash, address buyer) public returns (bool success) {
         address orderOwner = orders[hash].owner;
-        FixedSupplyToken st = orders[hash].sellToken;
-        FixedSupplyToken bt = orders[hash].buyToken;
+        address st = orders[hash].sellToken;
+        address bt = orders[hash].buyToken;
         uint sv = orders[hash].sellValue;
         uint bv = orders[hash].buyValue;
         
         require(valid[hash],"Order is invalid.");
-        require(st.allowance(orderOwner, owner) < sv || st.balanceOf(orderOwner) < sv, "Order's owner doesn't have enough token.");
-        require(bt.allowance(orderOwner, owner) < bv || bt.balanceOf(orderOwner) < bv, "Buyer doesn't have enough token.");
+        require(ERC20Interface(st).allowance(orderOwner, owner) >= sv || ERC20Interface(st).balanceOf(orderOwner) >= sv, "Order's owner doesn't have enough token.");
+        require(ERC20Interface(bt).allowance(orderOwner, owner) >= bv || ERC20Interface(bt).balanceOf(orderOwner) >= bv, "Buyer doesn't have enough token.");
         
-        st.transferFrom(orderOwner, buyer, sv);
-        bt.transferFrom(buyer, orderOwner, bv);
+        ERC20Interface(st).transferFrom(orderOwner, buyer, sv);
+        ERC20Interface(bt).transferFrom(buyer, orderOwner, bv);
         emit TradeEvent(hash, buyer);
         return true;
     }
-    function watchOrder(bytes32 hash) public view returns (address,FixedSupplyToken,FixedSupplyToken,uint,uint) {
+    function watchOrder(bytes32 hash) public view returns (address,address,address,uint,uint) {
         return (orders[hash].owner, orders[hash].sellToken, orders[hash].buyToken, orders[hash].sellValue, orders[hash].buyValue);
     } 
 }
