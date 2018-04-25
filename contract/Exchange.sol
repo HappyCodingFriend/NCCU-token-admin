@@ -50,9 +50,6 @@ contract ERC223Token is ERC223Interface  {
     bool public valid = true;
     
     address owner;
-    mapping(address => bool) auth;
-    
-    uint price = 0;
     
     constructor(string _name, string _symbol, uint8 _decimals, uint256 __totalSupply, uint64 _deadline) public {
         name = _name;
