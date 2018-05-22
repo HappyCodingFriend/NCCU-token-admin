@@ -60,11 +60,11 @@ function cancelExchange(exchange, privateKey, nonce){
 function signTx(privateKey, _to, _nonce, _data){
     let tx = web3.eth.accounts.signTransaction({
         to: _to,
-        gas: 4000000,
+        gas: '0x3d0900',
         gasPrice: '0x0',
         nonce: _nonce, 
         data: _data,
-        chainId: "0x11" //改成你的chain id
+        chainId: "0xF" //改成你的chain id
     }, privateKey)
     return tx;
 }

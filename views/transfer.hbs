@@ -12,7 +12,16 @@
         </div>
         <div class="form-group" style="margin-bottom:30px;">
             <label for="address">發送對象帳戶地址</label>
-            <input class="form-control" id="address" type="text">
+            <div class="input-group">
+                <input class="form-control" id="address" type="text">
+                <div class="input-group-btn">
+                    <button class="btn btn-default" type="submit">
+                        <a href="#users" data-toggle="modal" data-target="#users">
+                            <i class="glyphicon glyphicon-plus"></i>
+                        </a>
+                    </button>
+                </div>
+            </div>
         </div>
         <div class="form-group" style="margin-bottom:30px;">
             <label for="keyfile">輸入憑證檔案(keyfile)</label>
@@ -45,7 +54,42 @@
         <hr>
     </div>
 </div>
+<div class="modal fade" id="users" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">用戶清單</h4>
+            </div>
+            <div class="modal-body">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>學號</th>
+                            <th>姓名</th>
+                            <th>加入</th>
+                        </tr>
+                    </thead>
+                    <tbody id="list">
+                        {{#each users}}
+                        <tr>
+                            <th>{{ID}}</th>
+                            <th>{{name}}</th>
+                            <th>
+                                <input type="checkbox" id="addUser" value="{{address}}">
+                            </th>
+                        </tr>
+                        {{/each}}
+                    </tbody>
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button id="checkUsers" type="button" class="btn btn-default" data-dismiss="modal">確認</button>
+            </div>
+        </div>
 
+    </div>
+</div>
 <script src="./javascripts/transfer.js"></script>
 <script src="./javascripts/web3.min.js"></script>
 <script src="./javascripts/signtx.js"></script>

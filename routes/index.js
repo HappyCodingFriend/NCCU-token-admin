@@ -18,7 +18,9 @@ router.get('/', function (req, res, next) {
   })
 });
 router.get('/transfer', function (req, res, next) {
-  res.render('transfer', { title: "發送點數" });
+  mysql.getUser(function(users){
+    res.render('transfer', { title: "發送點數", users: users });
+  })
 });
 router.get('/search', function (req, res, next) {
   res.render('search', { title: "查詢點數" });

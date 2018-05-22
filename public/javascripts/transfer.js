@@ -10,30 +10,54 @@ $(document).ready(function () {
         }
         reader.readAsText(file)
     })
+    $('#checkUsers').click(function () {
+        users();
+    })
     $('#transfer').click(function () {
+        $('.loader').show();
+        $('.overlay').show();
+        let privateKey;
         let token = $('#token1').val();
         let value = $('#value').val();
-        let privateKey = web3.eth.accounts.decrypt(keyfile, $("#pwd").val()).privateKey;
-        $.get('/nonce', {
-            account: web3.eth.accounts.privateKeyToAccount(privateKey).address
-        }, function (nonce) {
-            //for (a in to) {
-            //transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
-            transfer($('#address').val(), value, privateKey, token, parseInt(nonce)).then(function (tx) {
-                console.log(tx);
-                $.post('/transaction/transfer', {
-                    tx: tx.rawTransaction,
-                    number: value
-                }, function (result) {
-                    $('#transaciotns').append(syntaxHighlight(result) + '<hr>');
-                    $('#inpwd').modal('hide');
-                });
+        let to = $('#address').val().split(",");
+        try {
+            privateKey = web3.eth.accounts.decrypt(keyfile, $("#pwd").val()).privateKey;
+            if (token == "" || value == "") throw '表格未填完'
+        }
+        catch (err) {
+            $('.loader').hide();
+            $('.overlay').hide();
+            if (err == '表格未填完') {
+                alert(err);
+            }
+            else {
+                alert("密碼錯誤");
+            }
+            return;
+        }
+        finally {
+            $.get('/nonce', {
+                account: web3.eth.accounts.privateKeyToAccount(privateKey).address
+            }, async function (nonce) {
+                for (a in to) {
+                    if (to[a] != "") {
+                        transfer(to[a], value, privateKey, token, parseInt(nonce) + parseInt(a)).then(function (tx) {
+                            //transfer($('#address').val(), value, privateKey, token, parseInt(nonce)).then(function (tx) {
+                            $.post('/transaction/transfer', {
+                                tx: tx.rawTransaction,
+                                number: value
+                            }, function (result) {
+                                $('#transaciotns').append(syntaxHighlight(result) + '<hr>');
+                            });
+                        });
+                    }
+                };
+                $('#inpwd').modal('hide');
+                $('.loader').hide();
+                $('.overlay').hide();
             });
-        });
+        }
     });
-    $('#addPerson').click(function () {
-        addOptions($('#stdnumber').val(), $('#name').val(), $('#address').val());
-    })
 });
 
 function syntaxHighlight(json) {
@@ -56,4 +80,13 @@ function syntaxHighlight(json) {
         }
         return '<span class="' + cls + '">' + match + '</span>';
     });
+}
+function users() {
+    let users = "";
+    $('input[type=checkbox]').each(function () {
+        if (this.checked) {
+            users += $(this).val() + ",";
+        }
+    })
+    $('#address').val(users);
 }
